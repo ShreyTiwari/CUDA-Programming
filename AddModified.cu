@@ -4,16 +4,18 @@ This program uses unified memory concept implemented from cuda version 6 and abo
 Terrible example to start with as the CPU can execute the opertaion 100x faster than the GPU.
 Benchmarking timings to compare speeds of execution.
 */
+
 /*
 Note that there is a considerable dependency of the ratio of execution times of the CPU and GPU on the 
 hardware which is being used to execute the run the program.
 */
 
+// Importing the required headers
 #include<stdio.h>
 #include<cuda.h>
 #include<time.h>
 
-//returns the duration from start to end times in sec
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end)
 {
 	double t;
@@ -22,16 +24,19 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
+// GPU Kernel to add two numbers
 __global__ void GPU_ADD(int *a, int *b)
 {
 	a[0] += b[0];	//add the numbers and store the result in 'a'.
 }
 
+// CPU function to add two numbers
 int CPU_ADD(int a, int b)
 {
 	return a+b;	//return result
 }
 
+// Code execution begins here
 int main()
 {
 	struct timespec start1, end1;	//variables to store time for GPU
@@ -72,5 +77,3 @@ int main()
 
 	return 0;
 }
-
-

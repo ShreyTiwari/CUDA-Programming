@@ -7,11 +7,13 @@ Benchmarking is done to compare the CPU and GPU computational approaches to the 
 Also this program tries to use shared memory to measure if there is any performance gain due to
 the use of shared memory between threads.
 */
+
 /*
 Note that there is a considerable dependency of the ratio of execution times of the CPU and GPU on the 
 hardware which is being used to execute the run the program.
 */
 
+// Importing the required headers
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -25,7 +27,7 @@ struct position
 
 __device__ const int blocksize = 128;
 
-//returns the duration from start to end times in sec
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end) 
 {
 	double t;
@@ -34,6 +36,7 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
+// GPU Kernel
 __global__ void GPU_Find(struct position *points, int *nearest, int n)
 {
     int id = threadIdx.x + blockIdx.x * blocksize;
@@ -88,6 +91,7 @@ __global__ void GPU_Find(struct position *points, int *nearest, int n)
     return;
 }
 
+// CPU Function
 void CPU_Find(struct position *points, int *nearest, int n)
 {
     int min;       //All the distances are going to be smaller than this.
@@ -117,6 +121,7 @@ void CPU_Find(struct position *points, int *nearest, int n)
     return;
 }
 
+// Code execution begins here
 int main()
 {
     struct timespec start1, end1;

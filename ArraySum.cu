@@ -1,21 +1,20 @@
 /*
 Program to find the sum of all the array elements given that the length of the array is a power of 2.
-Benchmarking is been done to compare the performance of the CPU( squential with extremely powerful cores ) and
-the GPU( parallel with modestly powerful cores ).
+Benchmarking is been done to compare the performance of the CPU (squential with extremely powerful cores) and
+the GPU (parallel with modestly powerful cores).
 */
+
 /*
 Sequential codes takes n-1 steps whereas parallel code takes log(n) base 2 steps.
 Note: Algorithm can handle only sizes less than or equal to 2^11. 
 */
-/*
-Try out with shared memory?
-*/ 
 
+// Importing the required headers
 #include<stdio.h>
 #include<time.h>
 #include<cuda.h>
 
-//returns the duration from start to end times in sec
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end) 
 {
 	double t;
@@ -24,6 +23,7 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
+// GPU Kernel
 __global__ void GPU_Sum1(int *a, int len)   //GPU code without shared memory.
 {
     int id = threadIdx.x;
@@ -39,6 +39,7 @@ __global__ void GPU_Sum1(int *a, int len)   //GPU code without shared memory.
     return;
 }
 
+// GPU Kernel
 __global__ void GPU_Sum2(int *array, int len)   //GPU code with shared memory.
 {
     extern __shared__ int a[];
@@ -62,6 +63,7 @@ __global__ void GPU_Sum2(int *array, int len)   //GPU code with shared memory.
     return;
 }
 
+// CPU Function
 void CPU_Sum(int *a, int n)
 {
     for(int i = n-1; i > 0; i--)
@@ -70,6 +72,7 @@ void CPU_Sum(int *a, int n)
     return;
 }
 
+// Code execution begins here
 int main()
 {
     struct timespec start1, end1;	//variables to store time for GPU
@@ -125,13 +128,13 @@ int main()
     CPU_Sum(a3, n);
     clock_gettime(CLOCK_REALTIME, &end3);	//end timestamp
 
-    printf("\nResult of the GPU( without shared memory )  : %d\n", a1[0]);
-    printf("Result of the GPU( with shared memory )     : %d\n", a2[0]);
+    printf("\nResult of the GPU (without shared memory) : %d\n", a1[0]);
+    printf("Result of the GPU (with shared memory)      : %d\n", a2[0]);
     printf("Result of the CPU                           : %d\n", a3[0]);
 
-    printf("\nTime taken by GPU( no shared memory ) is  : %lf\n", time_elapsed(&start1, &end1));	 //print result for GPU
-    printf("Time taken by GPU( with shared memory ) is: %lf\n", time_elapsed(&start2, &end2));	 //print result for GPU
-    printf("Time taken by CPU is                      : %lf\n", time_elapsed(&start3, &end3));	 //print result for CPU
+    printf("\nTime taken by GPU (no shared memory) is  : %lf\n", time_elapsed(&start1, &end1));	 //print result for GPU
+    printf("Time taken by GPU (with shared memory) is  : %lf\n", time_elapsed(&start2, &end2));	 //print result for GPU
+    printf("Time taken by CPU is                       : %lf\n", time_elapsed(&start3, &end3));	 //print result for CPU
 
     cudaFree(a1);
     cudaFree(a2);

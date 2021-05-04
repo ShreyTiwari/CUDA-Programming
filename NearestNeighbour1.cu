@@ -5,11 +5,13 @@ The brute force approach can easily be converted into a embarassingly parallel a
 the GPU where there is no interaction between the threads.
 Benchmarking is done to compare the CPU and GPU computational approaches to the problem.
 */
+
 /*
 Note that there is a considerable dependency of the ratio of execution times of the CPU and GPU on the 
 hardware which is being used to execute the run the program.
 */
 
+// Importing the required headers
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -21,7 +23,8 @@ struct position
     int x,y,z;      //odd number of parameters in the structure helps reducing bank conflicts in shared memory(if used).
 };
 
-//returns the duration from start to end times in sec
+
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end) 
 {
 	double t;
@@ -30,6 +33,7 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
+// GPU Kernel
 __global__ void GPU_Find(struct position *points, int *nearest, int n)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -56,6 +60,7 @@ __global__ void GPU_Find(struct position *points, int *nearest, int n)
     return;
 }
 
+// CPU Function
 void CPU_Find(struct position *points, int *nearest, int n)
 {
     int min;       //All the distances are going to be smaller than this.
@@ -85,6 +90,7 @@ void CPU_Find(struct position *points, int *nearest, int n)
     return;
 }
 
+// Code execution begins here
 int main()
 {
     struct timespec start1, end1;

@@ -3,16 +3,18 @@ Program to multiply two matrices using the CPU and the GPU.
 Benchmarking the timings to compare CPUs sequential execution to the parallel computation
 capability of a GPU.
 */
+
 /*
 Note that there is a considerable dependency of the ratio of execution times of the CPU and GPU on the 
 hardware which is being used to execute the run the program.
 */
 
+// Importing the required headers
 #include<stdio.h>
 #include<cuda.h>
 #include<time.h> 
 
-//returns the duration from start to end times in sec
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end) 
 {
 	double t;
@@ -21,6 +23,7 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
+// GPU Kernel
 __global__ void GPU_MUL(int **a, int **b, int **c, int n)
 {
 	int i = blockIdx.x;		//each block operates on one row a/c.
@@ -36,6 +39,7 @@ __global__ void GPU_MUL(int **a, int **b, int **c, int n)
 }
 
 /*
+// CPU Function
 void CPU_MUL(int **a, int **b, int **c, int n)
 {
 	int ans;
@@ -57,6 +61,7 @@ void CPU_MUL(int **a, int **b, int **c, int n)
 }
 */
 
+// CPU Function
 void CPU_MUL(int **a, int **b, int **c, int n)
 {
 	int ans;
@@ -82,6 +87,7 @@ void CPU_MUL(int **a, int **b, int **c, int n)
 	return;
 }
 
+// Code execution begins here
 int main()
 {
 	struct timespec start1, end1;	//variables to store time for GPU

@@ -3,16 +3,18 @@ Program to add two long integer integer arrays.
 Hopefully this is a better exploitation of the GPU's parallel computing capabilities.
 Benchmarking timing to compare execution speeds.
 */
+
 /*
 Note that there is a considerable dependency of the ratio of execution times of the CPU and GPU on the 
 hardware which is being used to execute the run the program.
 */
 
+// Importing the required headers
 #include<stdio.h>
 #include<cuda.h>
 #include<time.h>
 
-//returns the duration from start to end times in sec
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end) 
 {
 	double t;
@@ -21,7 +23,17 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
+// GPU Kernel
+__global__ void GPU_ADD(int *a, int *b, int n)
+{
+	int id = threadIdx.x + blockDim.x * blockIdx.x;
+
+	if(id > n) return;
+	else b[id] += a[id];
+}
+
 /*
+// GPU Kernel Varient
 __global__ void GPU_ADD(int *a, int *b, int n)
 {
 	int index = threadIdx.x;
@@ -32,22 +44,14 @@ __global__ void GPU_ADD(int *a, int *b, int n)
 }
 */
 
-
-__global__ void GPU_ADD(int *a, int *b, int n)
-{
-	int id = threadIdx.x + blockDim.x * blockIdx.x;
-
-	if(id > n) return;
-	else b[id] += a[id];
-}
-
-
+// CPU function
 void CPU_ADD(int *a, int *b, int n)
 {
 	for(int i = 0; i < n; i++)
 		b[i] += a[i];
 }
 
+// Code execution begins here
 int main()
 {
 	struct timespec start1, end1;	//variables to store time for GPU

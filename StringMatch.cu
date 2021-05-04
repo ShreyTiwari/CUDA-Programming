@@ -3,14 +3,16 @@ This program counts the number of occurrences of a pattern in a string.
 Benchmarking is done between the CPUs sequential execution and GPUs parallel execution to compare the
 two approaches to solving the problem.
 */
+
 /*
 Note that there is a considerable dependency of the ratio of execution times of the CPU and GPU on the 
 hardware which is being used to execute the run the program.
 */
+
 /*
 There is dependency between the threads of the GPU. Check to see if they are handled properly.
-( After execution we see that it isn't working well..... Have to see whats the problem )
-( Try to use atomic operation )
+(After execution we see that it isn't working well... Have to see whats the problem)
+(Try to use atomic operation)
 */
 
 #include<stdio.h>
@@ -18,7 +20,7 @@ There is dependency between the threads of the GPU. Check to see if they are han
 #include<time.h>
 #include<string.h>
 
-//returns the duration from start to end times in sec
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end) 
 {
 	double t;
@@ -27,7 +29,7 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
-//GPU function is find the total number of matches.
+// GPU function is find the total number of matches.
 __global__ void GPU_Match(const char *str, const char *ptrn, int n, int m, int *count)
 {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
@@ -42,7 +44,7 @@ __global__ void GPU_Match(const char *str, const char *ptrn, int n, int m, int *
     return;
 }
 
-//CPU function is find the total number of matches.
+// CPU function is find the total number of matches.
 void CPU_Match(const char *str, const char *ptrn, int n, int m, int *count)
 {
     for(int i = 0; i < (n-m+1); i++)
@@ -55,6 +57,7 @@ void CPU_Match(const char *str, const char *ptrn, int n, int m, int *count)
     return;
 }
 
+// Code execution begins here
 int main()
 {
     struct timespec start1, end1;   // to find GPU time

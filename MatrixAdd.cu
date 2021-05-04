@@ -3,16 +3,18 @@ The following program is written to add two matrices.
 Benchmarking the time of execution on the CPU and the GPU is done to compare the sequential and parallel
 approach to solve this problem.
 */
+
 /*
 Note that there is a considerable dependency of the ratio of execution times of the CPU and GPU on the 
 hardware which is being used to execute the run the program.
 */
 
+// Importing the required headers
 #include<stdio.h>
 #include<cuda.h>
 #include<time.h>
 
-//returns the duration from start to end times in sec
+// Returns the duration from start to end times in sec
 double time_elapsed(struct timespec *start, struct timespec *end) 
 {
 	double t;
@@ -21,6 +23,7 @@ double time_elapsed(struct timespec *start, struct timespec *end)
 	return t;
 }
 
+// GPU Kernel
 __global__ void GPU_ADD(int **a, int **b, int **c, int n)
 {
     int i = blockIdx.x / n;
@@ -31,6 +34,7 @@ __global__ void GPU_ADD(int **a, int **b, int **c, int n)
     return;
 }
 
+// CPU Function
 void CPU_ADD(int **a, int **b, int **c, int n)
 {
     for(int i = 0; i < n; i++)
@@ -40,6 +44,7 @@ void CPU_ADD(int **a, int **b, int **c, int n)
     return;
 }
 
+// Code execution begins here
 int main()
 {
 	struct timespec start1, end1;	//variables to store time for GPU
